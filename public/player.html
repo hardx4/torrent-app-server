@@ -1,0 +1,21 @@
+<script src="/socket.io.js"></script>
+<script src="https://cdn.jwplayer.com/libraries/OHxeRoMx.js"></script>
+<script>
+  var socket = io();
+</script>
+
+<div id="myDiv"></div>
+<script>
+jwplayer("myDiv").setup({
+    "file": "http://127.0.0.1:5002/api/torrent/4d6eec0199a4755c07e4bcc0e34d0a3cf4097554/download/5.mp4",
+    "image": "https://observatoriodatelevisao.bol.uol.com.br/wp-content/uploads/2019/06/pets-a-vida-secreta-dos-bichos.jpg",
+    "height": '100%',
+    "width": '100%',
+    "tracks": [{ 
+            "file": "http://127.0.0.1:5002/api/torrent/4d6eec0199a4755c07e4bcc0e34d0a3cf4097554/legenda/3.srt", 
+            "label": "Portugues",
+            "kind": "captions",
+            "default": true 
+        }]
+});
+</script>
