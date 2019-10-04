@@ -1,0 +1,23 @@
+{
+    "appName": "torrent-app-server",
+	"appVersion": "1.0.0",
+
+	"logging": {
+        "files": {
+            "level": "info",
+            "directory": "logs",
+            "flushInterval": 5
+        },
+        "console": {
+            "level": "info",
+            "colors": true
+        }
+    },
+    "bdconfig": {
+        "host": "127.0.0.1",
+        "port": 3306,
+        "user": "root",
+        "password": "password",
+        "database": "database_name"
+    }
+}

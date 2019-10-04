@@ -1,21 +1,38 @@
 <script src="/socket.io.js"></script>
-<script src="https://cdn.jwplayer.com/libraries/OHxeRoMx.js"></script>
+<script src="/jwplayer.js" type="text/javascript"></script>
+
 <script>
-  var socket = io();
+  var hashing = location.pathname.substring(1).split('/')[1];
+  var socket = io('/',{ query: "foo="+hashing });
+  fetch('/get/video', {
+	      method: 'POST',
+	      body: 'foo='+hashing,
+	      headers: {
+	        'Content-Type': 'application/x-www-form-urlencoded'
+	      }
+  })
+  .then(response => response.text())
+  .then(function(data){
+    try {
+      var meta = JSON.parse(data);
+      jwplayer("myDiv").setup({
+          "file": "/api/torrent/"+hashing+"/download/"+meta.movie_video_index+".mp4",
+          "image": meta.movie_thumb,
+          "title": meta.movie_name,
+          "height": '100%',
+          "width": '100%',
+          "tracks": [{ 
+                  "file": "/api/torrent/"+hashing+"/legenda/"+meta.movie_legenda_index+".srt", 
+                  "label": "Portugues",
+                  "kind": "captions",
+                  "default": true 
+              }]
+      });
+    } catch (error) {
+      alert("Ocorreu um erro no carregamento...");
+      return ;
+    }
+  }); 
 </script>
 
-<div id="myDiv"></div>
-<script>
-jwplayer("myDiv").setup({
-    "file": "http://127.0.0.1:5002/api/torrent/4d6eec0199a4755c07e4bcc0e34d0a3cf4097554/download/5.mp4",
-    "image": "https://observatoriodatelevisao.bol.uol.com.br/wp-content/uploads/2019/06/pets-a-vida-secreta-dos-bichos.jpg",
-    "height": '100%',
-    "width": '100%',
-    "tracks": [{ 
-            "file": "http://127.0.0.1:5002/api/torrent/4d6eec0199a4755c07e4bcc0e34d0a3cf4097554/legenda/3.srt", 
-            "label": "Portugues",
-            "kind": "captions",
-            "default": true 
-        }]
-});
-</script>
+<div id="myDiv">Carregando...</div>
