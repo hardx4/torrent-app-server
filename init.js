@@ -39,9 +39,12 @@ store.torrentstatus = {};
 
 // Allow Cross-Origin requests
 app.use(function(req, res, next) {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'OPTIONS, POST, GET, PUT, DELETE');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    const corsWhitelist = config.server.hostsWhitelist;    
+    if (corsWhitelist.join(',').indexOf(req.headers.origin) !== -1) {
+        res.header('Access-Control-Allow-Origin', req.headers.origin);
+        res.header('Access-Control-Allow-Methods', 'OPTIONS, POST, GET, PUT, DELETE');
+        res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    }
     next();
 });
 
@@ -133,14 +136,6 @@ var gettorrentstatus = async () => {
     }
     store.torrentstatus = {global: globalspeed, solo: speed_solo_arr};    
 };
-
-/*
-var teste = setInterval(() => {
-    gettorrentstatus().then(()=>{
-        console.log(store.torrentstatus);
-    });    
-},5000);
-*/
 
 function addtorrent(infoHash, callback){        
     if(typeof store.torrents[infoHash] != 'undefined') {		

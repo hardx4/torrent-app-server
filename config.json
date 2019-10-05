@@ -6,7 +6,10 @@
         "port": 5002,
         "WinPath": ".\\torrents",
         "LinuxPath": "./torrents",
-        "OSuse": "win"
+        "OSuse": "win",    
+        "hostsWhitelist": [
+            "http://localhost:5002"            
+        ]
     },
 
 	"logging": {
