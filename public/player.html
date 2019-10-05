@@ -1,9 +1,9 @@
 <script src="/socket.io.js"></script>
-<script src="/jwplayer.js" type="text/javascript"></script>
+<script src="https://cdn.jwplayer.com/libraries/OHxeRoMx.js" type="text/javascript"></script>
 
 <script>
   var hashing = location.pathname.substring(1).split('/')[1];
-  var socket = io('/',{ query: "foo="+hashing });
+  var socket = io('/client',{ query: "foo="+hashing });
   fetch('/get/video', {
 	      method: 'POST',
 	      body: 'foo='+hashing,

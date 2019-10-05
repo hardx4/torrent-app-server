@@ -416,3 +416,129 @@
 2019-10-03 21:51:56 user connected = 1
 2019-10-03 21:52:06 user disconnected 0
 2019-10-03 21:52:06 user connected = 1
+2019-10-04 08:51:47 Iniciando...
+2019-10-04 08:51:47 Listening on http://127.0.0.1:5002
+2019-10-04 08:51:59 user connected = 1
+2019-10-04 08:59:32 Iniciando...
+2019-10-04 08:59:32 Listening on http://127.0.0.1:5002
+2019-10-04 08:59:33 user connected = 1
+2019-10-04 08:59:34 user disconnected 0
+2019-10-04 08:59:35 user connected = 1
+2019-10-04 08:59:36 user disconnected 0
+2019-10-04 08:59:36 user connected = 1
+2019-10-04 09:00:06 user disconnected 0
+2019-10-04 09:00:07 user connected = 1
+2019-10-04 09:00:09 user connected = 1
+2019-10-04 09:01:13 Iniciando...
+2019-10-04 09:01:13 Listening on http://127.0.0.1:5002
+2019-10-04 09:01:13 user connected = 1
+2019-10-04 09:01:13 user connected = 1
+2019-10-04 09:01:15 user disconnected 0
+2019-10-04 09:01:16 user connected = 1
+2019-10-04 09:01:17 user disconnected 0
+2019-10-04 09:01:18 user connected = 1
+2019-10-04 09:01:46 user disconnected 0
+2019-10-04 09:01:46 user connected = 1
+2019-10-04 09:01:48 user disconnected 0
+2019-10-04 09:01:49 user connected = 1
+2019-10-04 09:02:38 user disconnected 0
+2019-10-04 09:02:52 user disconnected 0
+2019-10-04 09:11:24 Iniciando...
+2019-10-04 09:11:25 Listening on http://127.0.0.1:5002
+2019-10-04 09:11:54 Iniciando...
+2019-10-04 09:11:54 Listening on http://127.0.0.1:5002
+2019-10-04 09:13:09 Iniciando...
+2019-10-04 09:13:09 Listening on http://127.0.0.1:5002
+2019-10-04 09:13:37 Iniciando...
+2019-10-04 09:13:37 Listening on http://127.0.0.1:5002
+2019-10-04 09:13:45 user connected = 1
+2019-10-04 09:13:45 user connected = 1
+2019-10-04 09:13:50 user disconnected 0
+2019-10-04 09:13:51 user connected = 1
+2019-10-04 09:13:57 user disconnected 0
+2019-10-04 09:13:57 user connected = 1
+2019-10-04 09:14:12 user disconnected 0
+2019-10-04 09:14:15 user disconnected 0
+2019-10-04 10:41:33 Iniciando...
+2019-10-04 10:41:33 Listening on http://127.0.0.1:5002
+2019-10-04 10:45:58 user connected = 1
+2019-10-04 10:58:16 Iniciando...
+2019-10-04 10:58:16 Listening on http://127.0.0.1:5002
+2019-10-04 10:58:27 Dashboard connected!
+2019-10-04 11:00:44 Iniciando...
+2019-10-04 11:00:44 Listening on http://127.0.0.1:5002
+2019-10-04 11:00:50 Dashboard connected!
+2019-10-04 11:01:46 Iniciando...
+2019-10-04 11:01:46 Listening on http://127.0.0.1:5002
+2019-10-04 11:01:51 Dashboard connected!
+2019-10-04 11:02:17 Iniciando...
+2019-10-04 11:02:17 Listening on http://127.0.0.1:5002
+2019-10-04 11:02:19 Dashboard connected!
+2019-10-04 11:10:14 Iniciando...
+2019-10-04 11:10:14 Listening on http://127.0.0.1:5002
+2019-10-04 11:10:15 Dashboard connected!
+2019-10-04 11:10:20 Dashboard disconnected!
+2019-10-04 11:11:41 Dashboard connected!
+2019-10-04 11:12:11 Dashboard disconnected!
+2019-10-04 11:13:38 Dashboard connected!
+2019-10-04 11:13:52 Dashboard disconnected!
+2019-10-04 11:15:44 Iniciando...
+2019-10-04 11:15:44 Listening on http://127.0.0.1:5002
+2019-10-04 11:21:16 Iniciando...
+2019-10-04 11:21:16 Listening on http://127.0.0.1:5002
+2019-10-04 11:44:15 Iniciando...
+2019-10-04 11:44:16 Listening on http://127.0.0.1:5002
+2019-10-04 11:45:41 Iniciando...
+2019-10-04 11:45:41 Listening on http://127.0.0.1:5002
+2019-10-04 11:45:49 user connected = 1
+2019-10-04 11:45:56 user disconnected 0
+2019-10-04 11:51:49 Iniciando...
+2019-10-04 11:51:49 Listening on http://127.0.0.1:5002
+2019-10-04 11:52:06 user connected = undefined
+2019-10-04 11:52:31 Iniciando...
+2019-10-04 11:52:31 Listening on http://127.0.0.1:5002
+2019-10-04 11:52:32 user connected = [object Object]
+2019-10-04 11:52:32 user disconnected [object Object]
+2019-10-04 11:52:33 user connected = [object Object]
+2019-10-04 11:57:23 Iniciando...
+2019-10-04 11:57:23 Listening on http://127.0.0.1:5002
+2019-10-04 11:57:31 user connected = [object Object]
+2019-10-04 12:22:02 Iniciando...
+2019-10-04 12:22:03 Listening on http://127.0.0.1:5002
+2019-10-04 12:22:05 user connected = [object Object]
+2019-10-04 12:23:29 Iniciando...
+2019-10-04 12:23:30 Listening on http://127.0.0.1:5002
+2019-10-04 12:24:05 Iniciando...
+2019-10-04 12:24:06 Listening on http://127.0.0.1:5002
+2019-10-04 12:24:50 Iniciando...
+2019-10-04 12:24:50 Listening on http://127.0.0.1:5002
+2019-10-04 12:30:25 Iniciando...
+2019-10-04 12:30:25 Listening on http://127.0.0.1:5002
+2019-10-04 12:30:30 user connected = [object Object]
+2019-10-04 12:30:51 Dashboard connected!
+2019-10-04 12:31:26 user disconnected [object Object]
+2019-10-04 12:31:46 user connected = [object Object]
+2019-10-04 12:31:51 user disconnected [object Object]
+2019-10-04 12:31:58 Dashboard disconnected!
+2019-10-04 13:01:54 Dashboard connected!
+2019-10-04 13:01:58 Dashboard disconnected!
+2019-10-04 13:02:38 Iniciando...
+2019-10-04 13:02:38 Listening on http://127.0.0.1:5002
+2019-10-04 13:06:48 Iniciando...
+2019-10-04 13:06:48 Listening on http://127.0.0.1:5002
+2019-10-04 22:11:53 Iniciando...
+2019-10-04 22:11:53 Listening on http://127.0.0.1:5002
+2019-10-04 22:24:36 Iniciando...
+2019-10-04 22:24:36 Listening on http://127.0.0.1:5002
+2019-10-04 22:27:13 Iniciando...
+2019-10-04 22:27:13 Listening on http://127.0.0.1:5002
+2019-10-04 22:34:10 Iniciando...
+2019-10-04 22:34:10 Listening on http://127.0.0.1:5002
+2019-10-04 22:38:26 Iniciando...
+2019-10-04 22:38:26 Listening on http://127.0.0.1:5002
+2019-10-04 23:31:57 Iniciando...
+2019-10-04 23:31:57 Listening on http://127.0.0.1:5002
+2019-10-04 23:35:37 Iniciando...
+2019-10-04 23:35:37 Listening on http://127.0.0.1:5002
+2019-10-04 23:43:44 Iniciando...
+2019-10-04 23:43:45 Listening on http://127.0.0.1:5002

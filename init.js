@@ -4,6 +4,7 @@ var parseTorrent = require('parse-torrent');
 var webtorrent = require('webtorrent');
 var path = require('path');
 var http = require('http');
+var rimraf = require('rimraf');
 require('events').EventEmitter.defaultMaxListeners = 50;
 require("./libs/configReader.js");
 require('./libs/logger.js');
@@ -16,7 +17,17 @@ const mysqlWork = require("./libs/mysql-worker.js");
 
 var app = express();
 var client = new webtorrent();
-var port = 5002;
+var port = config.server.port;
+
+var pathwin = config.server.WinPath;
+var pathlinux = config.server.LinuxPath;
+var currentOS = config.server.OSuse; //Alternate in win and linux
+
+if(currentOS == 'win'){
+    var path_torrent_default = pathwin+'\\';
+}else{
+    var path_torrent_default = pathlinux+'/';
+}
 
 var store = {};
 store.uris = {};
@@ -24,7 +35,7 @@ store.lastAccess = {};
 store.torrents = {};
 store.clients = {};
 store.metadata = {};
-
+store.torrentstatus = {};
 
 // Allow Cross-Origin requests
 app.use(function(req, res, next) {
@@ -59,13 +70,79 @@ var removeTorrent = function(ih) {
 	delete store.uris[ih];
 	delete store.torrents[ih];
     delete store.lastAccess[ih];
+    delete store.metadata[ih];
+
+    try {
+        if(currentOS == "win"){        
+            rimraf.sync(pathwin+'\\'+ih);
+        }else{
+            rimraf.sync(pathlinux+'/'+ih);
+        }
+    } catch (error) {
+        log('error', logSystem+'-rotatesystem', error);       
+    }
 };
+
+var cleartorrents = setInterval(() => {
+    var _time = time();
+    var clientscontrol = Object.values(store.clients).join(',');
+	Object.keys(store.lastAccess).forEach(function(key) {
+		var accessTime = store.lastAccess[key];
+		var delay = 60;
+		if(_time - accessTime > delay && clientscontrol.indexOf(key) == -1) {
+			log('info', logSystem+'-rotatesystem', 'Autoremoving ' + key + ' after ' + delay + ' seconds!');
+			removeTorrent(key);
+		}
+	});
+}, 60000);
 
 var time = function() {
 	return Math.floor(new Date() / 1000);
 };
 
-function addtorrent(infoHash, callback){    
+var gettorrentstatus = async () => {    
+    var clienttorrents = client.torrents;    
+    if(typeof clienttorrents == "undefined"){
+        return ;
+    }
+    if(clienttorrents.length == 0){
+        return ;
+    }
+    var globalspeed = client.downloadSpeed;    
+    var speed_solo_arr = [];
+
+    for(var i = 0; i < clienttorrents.length; i++){
+        if(clienttorrents[i].done){
+            var speed_solo_obj = {};
+            speed_solo_obj.infoHash = clienttorrents[i].infoHash;
+            speed_solo_obj.speed = 0;
+            speed_solo_obj.downloaded = clienttorrents[i].downloaded;
+            speed_solo_obj.total = clienttorrents[i].length;
+            speed_solo_obj.remaining = 0;
+            speed_solo_obj.progress = 1;
+        }else{
+            var speed_solo_obj = {};
+            speed_solo_obj.infoHash = clienttorrents[i].infoHash;
+            speed_solo_obj.speed = clienttorrents[i].downloadSpeed;
+            speed_solo_obj.downloaded = clienttorrents[i].downloaded;
+            speed_solo_obj.total = clienttorrents[i].length;
+            speed_solo_obj.remaining = clienttorrents[i].timeRemaining;
+            speed_solo_obj.progress = clienttorrents[i].progress;
+        }
+        speed_solo_arr.push(speed_solo_obj);
+    }
+    store.torrentstatus = {global: globalspeed, solo: speed_solo_arr};    
+};
+
+/*
+var teste = setInterval(() => {
+    gettorrentstatus().then(()=>{
+        console.log(store.torrentstatus);
+    });    
+},5000);
+*/
+
+function addtorrent(infoHash, callback){        
     if(typeof store.torrents[infoHash] != 'undefined') {		
         store.lastAccess[infoHash] = time();
         callback.sendFile(__dirname + '/public/player.html');            
@@ -73,10 +150,10 @@ function addtorrent(infoHash, callback){
     } 
        		        
     uri = buildMagnetURI(infoHash);
-
+    
     mysqlWork.execSQLQuery("SELECT movie_name,movie_thumb,movie_video_index,movie_legenda_index,movie_captions FROM movies WHERE movie_infohash = '"+infoHash+"'",(result) => {
         if(typeof result[0] != "undefined"){
-            store.torrents[infoHash] = client.add(uri, (torrent) => {
+            store.torrents[infoHash] = client.add(uri, {path: path_torrent_default+infoHash}, (torrent) => {
                 store.uris[infoHash] = uri;
                 store.lastAccess[infoHash] = time();
                 store.metadata[infoHash] = result[0];
@@ -129,101 +206,6 @@ app.post('/get/video', function(req, res) {
     }
     
     res.status(200).send(JSON.stringify(store.metadata[infoHash]));
-});
-
-app.get('/api/torrent/:infoHash/keep-alive', function(req, res) {
-	if(typeof req.params.infoHash == 'undefined' || req.params.infoHash == '') {
-        res.status(500).send('Missing infoHash parameter!'); return;
-    }
-    var infoHash = req.params.infoHash;
-    if(typeof store.torrents[infoHash] == 'undefined') {
-		res.status(404).send('File not found!');
-		return;
-	}
-	var _time = time();
-	store.lastAccess[infoHash] = _time;
-	res.status(200).send(_time.toString());
-});
-
-/* EXCLUIR QUANDO ESTIVER NA PRODUÇÃO */
-app.get('/api/parse-torrent-test', function(req, res) {
-    urii = "magnet:?xt=urn:btih:9C39651ED8952E5FFB9CD624AF512FBAA3691C4D&dn=%5bWWW.BLUDV.TV%5d%20Pets%20-%20A%20Vida%20Secreta%20dos%20Bichos%202%20%202019%20%28720p%20-%20BluRay%29%20%5bDUBLADO%5d%20Acesse%20o%20ORIGINAL%20WWW.BLUDV.TV&tr=udp%3a%2f%2ftracker.openbittorrent.com%3a80%2fannounce&tr=udp%3a%2f%2ftracker.opentrackr.org%3a1337%2fannounce&tr=udp%3a%2f%2f9.rarbg.to%3a2790%2fannounce&tr=udp%3a%2f%2fexplodie.org%3a6969%2fannounce&tr=http%3a%2f%2fglotorrents.pw%3a80%2fannounce&tr=udp%3a%2f%2fp4p.arenabg.com%3a1337%2fannounce&tr=udp%3a%2f%2ftorrent.gresille.org%3a80%2fannounce&tr=udp%3a%2f%2ftracker.aletorrenty.pl%3a2710%2fannounce&tr=udp%3a%2f%2ftracker.coppersurfer.tk%3a6969%2fannounce&tr=udp%3a%2f%2ftracker.piratepublic.com%3a1337%2fannounce";
-    myParseTorrent(urii, function(infoHash) {
-		if(!infoHash) {
-			return res.status(500).send('Error. ');
-		}
-        res.status(200).send({ infoHash: infoHash });
-        uri = buildMagnetURI(infoHash);
-        store.torrents[infoHash] = client.add(uri, function (torrent) {
-		    store.uris[infoHash] = uri;
-			store.lastAccess[infoHash] = time();            
-        });
-	});
-});
-/* EXCLUIR QUANDO ESTIVER NA PRODUÇÃO */
-
-app.post('/api/parse-torrent', function(req, res) {
-	if(typeof req.body.uri == 'undefined' || req.body.uri == '') {
-        res.status(500).send('Missing URI parameter!'); return;
-    }
-    myParseTorrent(req.body.uri, function(infoHash) {
-		if(!infoHash) {
-			return res.status(500).send('Error. ');
-		}
-		res.status(200).send({ infoHash: infoHash });
-	});
-});
-
-app.post('/api/add-torrent', function(req, res) {
-    if(typeof req.body.infoHash == 'undefined' || req.body.infoHash == '') {
-        res.status(500).send('Missing infoHash parameter!'); return;
-    }
-    var infoHash = req.body.infoHash;
-    var uri = buildMagnetURI(infoHash);
-    if(typeof store.torrents[infoHash] != 'undefined') {
-		res.status(200).send('Added file!');
-		store.lastAccess[infoHash] = time();
-		return;
-	}
-    try {
-        store.torrents[infoHash] = client.add(uri, function (torrent) {
-			store.uris[infoHash] = uri;
-			store.lastAccess[infoHash] = time();
-            res.status(200).send('Added torrent!');
-        });
-    } catch (err) {
-        res.status(500).send('Error: ' + err.toString());
-    }
-});
-
-app.get('/api/torrent/:infoHash/files', function(req, res) {
-    if(typeof req.params.infoHash == 'undefined' || req.params.infoHash == '') {
-        res.status(500).send('Missing infoHash parameter!'); return;
-    }
-    var infoHash = req.params.infoHash;
-    var uri = buildMagnetURI(infoHash);
-    if(typeof store.torrents[infoHash] == 'undefined') {
-		res.status(404).send('File not found!');
-		return;
-	}
-    try {
-        var torrent = client.get(uri);
-        
-        var files = [];
-        
-        for(i = 0; i < torrent.files.length; i++) {
-			var file = torrent.files[i];
-			files.push({
-				index: i,
-				name: file.name,
-				size: file.length
-			});
-		}
-        
-        res.status(200).send({ title: torrent.name, files: files });
-    } catch (err) {
-        res.status(500).send('Error: ' + err.toString());
-    }
 });
 
 app.get('/api/torrent/:infoHash/legenda/:index.srt', function(req, res) {
@@ -349,21 +331,40 @@ app.post('/api/torrent/:infoHash/delete', function(req, res) {
 var server = http.createServer(app);
 var io = require('socket.io')(server);
 
-io.on('connection', function(socket){
-    var handshakeData = socket.request;
-    if(typeof store.clients[handshakeData._query['foo']] == 'undefined'){
-        store.clients[handshakeData._query['foo']] = 1;
-    }else{
-        store.clients[handshakeData._query['foo']]++;
-    }
-    
-    
-    log('info', logSystem, 'user connected = '+store.clients[handshakeData._query['foo']]);
-    socket.on('disconnect', function(){
-        store.clients[handshakeData._query['foo']]--;
-        log('info', logSystem, 'user disconnected '+ store.clients[handshakeData._query['foo']]);
+var clientside = io
+    .of('/client')
+    .on('connection', function(socket){
+        var handshakeData = socket.request;        
+        if(typeof handshakeData._query['foo'] != "undefined"){
+            store.clients[socket.id.split('#')[1]] = handshakeData._query['foo'];
+        }
+        socket.on('disconnect', function(){
+            delete store.clients[socket.id.split('#')[1]];
+        });
     });
-});
+
+var serverdashboard = io
+    .of('/serverdashboard')
+    .on('connection', function(socket){       
+        
+        log('info', logSystem+'-dashboard-monitor', 'Dashboard connected!');
+
+        socket.on('getstatus', function(fn){
+            gettorrentstatus().then(()=>{
+                fn(JSON.stringify(store.torrentstatus));                
+            });            
+        });
+
+        socket.on('getclientcount', function(fn){
+            gettorrentstatus().then(()=>{
+                fn(JSON.stringify(store.clients));                
+            });            
+        });
+
+        socket.on('disconnect', function(){            
+            log('info', logSystem+'-dashboard-monitor', 'Dashboard disconnected!');
+        });
+    });
 
 server.listen(port, function() {
     log('info', logSystem, 'Listening on http://127.0.0.1:' + port);
