@@ -203,7 +203,7 @@ app.post('/get/video', function(req, res) {
     res.status(200).send(JSON.stringify(store.metadata[infoHash]));
 });
 
-app.get('/api/torrent/:infoHash/legenda/:index.srt', function(req, res) {
+app.get('/get/:infoHash/legenda/:index.srt', function(req, res) {
     if(typeof req.params.infoHash == 'undefined' || req.params.infoHash == '') {
         res.status(500).send('Missing infoHash parameter!'); return;
     }
@@ -252,7 +252,7 @@ app.get('/api/torrent/:infoHash/legenda/:index.srt', function(req, res) {
     }
 });
 
-app.get('/api/torrent/:infoHash/download/:index.mp4', function(req, res) {
+app.get('/get/:infoHash/stream/:index.mp4', function(req, res) {
     if(typeof req.params.infoHash == 'undefined' || req.params.infoHash == '') {
         res.status(500).send('Missing infoHash parameter!'); return;
     }

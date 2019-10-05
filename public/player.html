@@ -16,13 +16,13 @@
     try {
       var meta = JSON.parse(data);
       jwplayer("myDiv").setup({
-          "file": "/api/torrent/"+hashing+"/download/"+meta.movie_video_index+".mp4",
+          "file": "/get/"+hashing+"/stream/"+meta.movie_video_index+".mp4",
           "image": meta.movie_thumb,
           "title": meta.movie_name,
           "height": '100%',
           "width": '100%',
           "tracks": [{ 
-                  "file": "/api/torrent/"+hashing+"/legenda/"+meta.movie_legenda_index+".srt", 
+                  "file": "/get/"+hashing+"/legenda/"+meta.movie_legenda_index+".srt", 
                   "label": "Portugues",
                   "kind": "captions",
                   "default": true 
